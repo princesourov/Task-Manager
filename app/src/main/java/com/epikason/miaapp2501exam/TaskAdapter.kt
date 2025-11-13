@@ -20,6 +20,7 @@ class TaskAdapter(
         taskList = list
         notifyDataSetChanged()
     }
+
     class TaskViewHolder(val binding: ItemTaskBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
@@ -28,30 +29,31 @@ class TaskAdapter(
     }
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
+
+
         val task = taskList[position]
-
-
         holder.binding.apply {
             tvTitle.text = task.title
-            tvDescription.text = task.description ?: ""
+            tvDescription.text = task.description
             tvDueDate.text = task.dueDate?.let {
-            "Due: ${dateFormat.format(Date(it))}"
-        } ?: "No due date"
+                "Due: ${dateFormat.format(Date(it))}"
+            } ?: "No due date"
             cbCompleted.isChecked = task.isCompleted
 
-            root.setOnClickListener {
-            onItemClick(task)
-        }
-            root.setOnLongClickListener {
-            onDeleteClick(task)
-            true
-        }
+            btnEdit.setOnClickListener {
+                onItemClick(task)
+            }
+            btnDelete.setOnClickListener {
+                onDeleteClick(task)
+                true
+            }
             cbCompleted.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked != task.isCompleted) {
-                onCompletedChanged(task, isChecked)
+                if (isChecked != task.isCompleted) {
+                    onCompletedChanged(task, isChecked)
+                }
             }
         }
-    }}
+    }
 
     override fun getItemCount(): Int = taskList.size
 }
